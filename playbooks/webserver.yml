@@ -4,6 +4,7 @@
   hosts: all
   #become: yes
   tasks:
+
   - name: Install Apache Web Server
     yum:
       name: "{{ pkgs }}"

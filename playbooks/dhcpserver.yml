@@ -1,9 +1,10 @@
 ---
-- name: Hello World Sample
+- name: Configure DHCP Server
   gather_facts: no
   hosts: all
   #become: yes
   tasks:
+
   - name: Install DHCP Server
     yum:
       name: "{{ pkgs }}"
@@ -11,6 +12,7 @@
     vars:
       pkgs:
       - dhcp-server
+
   - name: Read hosts from CSV file and return a dictionary
     read_csv:
       path: ../files/dhcp_hosts.csv
