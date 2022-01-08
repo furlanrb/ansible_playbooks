@@ -1,0 +1,16 @@
+default-lease-time 600;
+max-lease-time 7200;
+
+subnet 10.0.0.0 netmask 255.255.255.0 {
+  range 10.0.0.1 10.0.0.254;
+  option domain-name-servers 8.8.8.8;
+  option routers 10.0.0.1;
+}
+
+{% for item in hosts['dict'] %}
+host {{ hosts['dict'][item]['HOSTNAME'] }} {
+  hardware ethernet {{ hosts['dict'][item]['MAC'] }};
+  fixed-address {{ hosts['dict'][item]['IP'] }};
+}
+
+{% endfor %}

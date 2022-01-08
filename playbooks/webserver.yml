@@ -1,0 +1,43 @@
+---
+- name: Configure apache webserver
+  gather_facts: no
+  hosts: all
+  #become: yes
+  tasks:
+  - name: Install Apache Web Server
+    yum:
+      name: "{{ pkgs }}"
+      state: latest
+    vars:
+      pkgs:
+      - httpd
+
+  - name: Copy index.html to root webserver directory
+    copy:
+      src: ../files/index.html
+      dest: /var/www/html/index.html
+    notify:
+      - Restart http server
+
+  - name: Start httpd server
+    service:
+      name: httpd
+      enabled: yes
+      state: started
+
+  - name: Allow http on firewall
+    firewalld:
+      permanent: yes
+      immediate: yes
+      service: "{{ item }}"
+      state: enabled
+    loop:
+      - http
+      - https
+
+  handlers:
+    - name: Restart http server
+      service:
+        name: httpd
+        state: restarted
+

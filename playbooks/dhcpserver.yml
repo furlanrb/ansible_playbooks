@@ -1,0 +1,37 @@
+---
+- name: Hello World Sample
+  gather_facts: no
+  hosts: all
+  #become: yes
+  tasks:
+  - name: Install DHCP Server
+    yum:
+      name: "{{ pkgs }}"
+      state: latest
+    vars:
+      pkgs:
+      - dhcp-server
+  - name: Read hosts from CSV file and return a dictionary
+    read_csv:
+      path: ../files/dhcp_hosts.csv
+      key: HOSTNAME
+    register: hosts
+    delegate_to: localhost
+
+  - name: Configure dhcpd.conf
+    template:
+      src: ../fies/dhcpd.j2
+      dest: /etc/dhcp/dhcpd.conf
+    notify:
+      - Restart DHCP Server
+
+  - name: Start dhcpd server
+    service:
+      name: dhcpd
+      enabled: yes
+      state: started
+  handlers:
+    - name: Restart DHCP Server
+      service:
+        name: dhcpd
+        state: restarted
