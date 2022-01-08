@@ -22,7 +22,7 @@
 
   - name: Configure dhcpd.conf
     template:
-      src: ../fies/dhcpd.j2
+      src: ../files/dhcpd.j2
       dest: /etc/dhcp/dhcpd.conf
     notify:
       - Restart DHCP Server
